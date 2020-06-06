@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8">
+    <title>ルーレット課題</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://code.jquery.com/jquery-3.5.0.min.js" integrity="sha256-xNzN2a4ltkB44Mc/Jz3pT4iU1cmeR0FkXs4pru/JxaQ=" crossorigin="anonymous"></script>
+    <script>
+    
+      var random;
+      var interval;
+      var random16 = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
+      // var random16 = [5, 10, 15];
+      var position;
+      var start_click = false;
+      var stop_click = true;
+      
+      function start_rulet(){
+        //ルーレットが回転する　マス目がランダムに点灯する
+        //○秒ごとに
+        if(start_click === false) {
+          interval = setInterval(rulet, 10);　//rulet関数を0.1秒ごとに
+          start_click = true;
+          $('#start').prop('disabled', true);
+          stop_click = false;
+          $('#stop').prop('disabled', false);
+        }
+      }
+      
+      function rulet(){
+          $('#c' + random).removeClass('red');
+        //マスをランダムに点灯させる
+        // random = Math.floor(Math.random()*17); //16までの数字が出る
+         position = Math.floor(Math.random()*random16.length);
+         random = random16[position];
+         $('#c' + random).addClass('red');
+      }
+      
+      function stop_rulet(){
+        if(stop_click === false) {
+          clearInterval(interval); //setIntervalを解除する。
+          $('#c' + random).addClass('stop');
+          random16.splice(position, 1); //positionから1個削除する
+          console.log(random16); //
+          start_click = false; //スタートを押せるようにする
+          $('#start').prop('disabled', false);
+          stop_click = true;　//
+        }
+        
+        if(random16.length === 0) {
+          $('#start').prop('disabled', true);
+        }
+      }
+      
+      function reset_rulet(){
+        $('td').removeClass('red stop');
+        clearInterval(interval);
+        start_click = false;
+        $('#start').prop('disabled', false);
+        random16 = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
+        $('#stop').prop('disabled', true);
+      }
+    
+      $(function(){    //window.onloadと同じ役割　　jQuery版のやつ
+        $('#start').click(start_rulet);　　　　//idのstartを取得し、クリックされたらstart_ruletの関数へ移動という意味
+        $('#stop').click(stop_rulet);
+        $('#reset').click(reset_rulet);
+      });
+    </script>
+  </head>
+  
+  <body>
+    <table>
+      <tr>
+        <td id="c1">1</td>
+        <td id="c2">2</td>
+        <td id="c3">3</td>
+        <td id="c4">4</td>
+      </tr>
+      <tr>
+        <td id="c5">5</td>
+        <td id="c6">6</td>
+        <td id="c7">7</td>
+        <td id="c8">8</td>
+      </tr>
+      <tr>
+        <td id="c9">9</td>
+        <td id="c10">10</td>
+        <td id="c11">11</td>
+        <td id="c12">12</td>
+      </tr>
+      <tr>
+        <td id="c13">13</td>
+        <td id="c14">14</td>
+        <td id="c15">15</td>
+        <td id="c16">16</td>
+      </tr>
+    </table>
+    <div class="button-wrapper"></div>
+      <button id="start">スタート</button>
+      <button id="stop">ストップ</button>
+      <button id="reset">リセット</button>
+    </div>
+  </body>
+</html>
